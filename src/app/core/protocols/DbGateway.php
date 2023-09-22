@@ -6,12 +6,14 @@ use core\models\CartElement;
 use core\models\Category;
 use core\models\User;
 use core\models\Item;
+use core\protocols\Model;
 
 /*
  * Интерфейс доступа к БД, Gateway
  * Абстрагирует работу с данными в БД с помощью моделей, загрузка данных в модели реализуется через репозитории (папка repos)
  */
 interface DbGateway {
+    public function create_model(string $model): void;
     public function create_user(User $user): void;
 
     public function get_user(int $id): User;

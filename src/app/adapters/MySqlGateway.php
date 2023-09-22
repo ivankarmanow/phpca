@@ -6,6 +6,7 @@ use core\models\User;
 use core\protocols\Config;
 use core\protocols\DbGateway;
 use PDO;
+use core\protocols\Model;
 
 /*
  * Реализация интерфейса работы с БД MySQL с помощью PDO
@@ -21,6 +22,14 @@ class MySqlGateway implements DbGateway {
         $this->dbh = new PDO($config->db_dsn, $config->db_user, $config->db_password, $options);
     }
 
+    public function create_model(string $model): void
+    {
+        if (!empty($model::$create_table)) {
+            $sql = $model::$create_table;
+        }
+        $this->dbh->query($sql);
+    }
+
     public function create_user(User $user): void
     {
         $sth = $this->dbh->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
@@ -30,14 +39,14 @@ class MySqlGateway implements DbGateway {
 
     public function get_user(int $id): User
     {
-        $sth = $this->dbh->prepare("SELECT User, * FROM users WHERE id = :user_id");
+        $sth = $this->dbh->prepare("SELECT 'User', * FROM users WHERE id = :user_id");
         $sth->bindValue(":user_id", $id);
         return $sth->fetch();
     }
 
     public function get_user_by_email(string $email): User
     {
-        $sth = $this->dbh->prepare("SELECT User, * FROM users WHERE email = :email");
+        $sth = $this->dbh->prepare("SELECT 'User', * FROM users WHERE email = :email");
         $sth->bindValue(":email", $email);
         return $sth->fetch();
     }
@@ -68,11 +77,7 @@ class MySqlGateway implements DbGateway {
 
     public function list_users(): array
     {
-        $sth = $this->dbh->prepare("SELECT * FROM users");
-        $sth->setFetchMode(PDO::FETCH_CLASS, User::class);
-        $sth->execute();
-        $users = $sth->fetchAll();
-//        var_dump($users);
-        return $users;
+        return $this->dbh->query("SELECT 'User', * FROM users")->fetchAll();
+//        $sth->setFetchMode(PDO::FETCH_CLASS, User::class);
     }
 }

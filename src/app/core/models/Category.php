@@ -2,21 +2,28 @@
 
 namespace core\models;
 
+use core\protocols\Model;
+
 /*
  * Модель категории товаров
  * Включает в себя список товаров Item
  * Реализует интерфейс массива
  */
-class Category implements \ArrayAccess
+class Category extends Model implements \ArrayAccess
 {
 
+    public static string $tablename = "categories";
+    public static string $create_table = "";
     public array $items = [];
+    public string $name;
+    public int $id = -1;
 
     public function __construct(
-        public string $name,
-        public int $id = -1
+        string $name = null,
+        int $id = -1
     ) {
-        
+        $this->name = $name;
+        $this->id = $id;
     }
 
     public function offsetExists(mixed $offset): bool

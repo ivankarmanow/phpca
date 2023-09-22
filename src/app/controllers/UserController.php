@@ -9,6 +9,8 @@ use core\routing\Request;
 use core\ViewsContainer;
 use views\user\ListUsersView;
 
+use core\exceptions\MethodNotAllowed;
+
 /*
  * Контроллер User
  * Реализует методы, схожие с репозиторием
@@ -24,7 +26,11 @@ class UserController extends Controller {
         $this->load_views(self::class);
     }
     public function add(Request $request) {
-
+        if ($request->getMethod() != "post") {
+            throw new MethodNotAllowed();
+        }
+        $params = $request->getParams();
+        
     }
 
     public function get(Request $request)
