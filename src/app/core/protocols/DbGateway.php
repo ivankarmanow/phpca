@@ -12,6 +12,8 @@ interface DbGateway {
 
     public function get_user(int $id): User;
 
+    public function get_user_by_email(string $email): User;
+
     public function check_user(string $email, string $password): bool;
 
     public function update_user(User $user): void;
@@ -46,7 +48,7 @@ interface DbGateway {
 //
 //    public function list_categories(): array;
 //
-//    public function list_users(): array;
+    public function list_users(): array;
 //
 //    public function list_cart(int $user_id): array;
 //

@@ -1,5 +1,7 @@
 <?php
 
+namespace adapters;
+
 use protocols\Config;
 
 

@@ -8,13 +8,14 @@ require "src/app/core/exceptions.php";
 use exceptions\IncludeParentRouter;
 use exceptions\MethodNotAllowed;
 use exceptions\RouterYetIncluded;
+use protocols\Controller;
 
 class Router {
     protected array $routes;
     protected array $routers;
     private array $parents;
 
-    public function __construct(public string $prefix = "", public array $allowed_methods = HTTP_METHODS, public string $name = "") {
+    public function __construct(public Controller $controller, public string $prefix = "", public array $allowed_methods = HTTP_METHODS, public string $name = "") {
         $this->routes = [];
         $this->routers = [];
         $this->parents = [];

@@ -11,17 +11,16 @@ spl_autoload_register(function ($class) {
     }
 });
 
-global $home;
-//require_once "src/app/core/routing/Dispatcher.php";
-//require_once "src/app/core/routing/Request.php";
-//
-//require_once "src/app/controllers/home.php";
+include "src/app/di.php";
+global $di;
 
 use routing\Dispatcher;
 use routing\Request;
-//use controllers\home;
+use controllers\UserController;
+use routing\Router;
 
-$dp = new Dispatcher();
-$dp->include_router($home);
+$dp = new Dispatcher($di['StubController']);
+
+//$user_router = new Router();
 
 $dp->resolve(new Request());

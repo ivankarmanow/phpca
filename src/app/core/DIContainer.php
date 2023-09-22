@@ -1,9 +1,8 @@
 <?php
 
-namespace di_container;
+namespace core;
 
-require_once __DIR__ . "/exceptions.php";
-
+use ArrayAccess;
 use exceptions\DependencyNotFound, exceptions\FactoryAlreadyExists, exceptions\ValueError;
 
 class DIContainer implements ArrayAccess {
@@ -57,26 +56,23 @@ class DIContainer implements ArrayAccess {
         }
     }
 
-    public function offsetSet($name, $factory): void {
-        if (!is_string($name) or !is_callable($factory)) {
+    public function offsetSet($offset, $value): void {
+        if (!is_callable($value)) {
             throw new ValueError();
         }
-        $this->register($name, $factory);
+        $this->register($offset, $value);
     }
 
-    public function offsetExists($name): bool {
-        return isset($this->factories[$name]);
+    public function offsetExists($offset): bool {
+        return isset($this->factories[$offset]);
     }
 
-    public function offsetUnset($name): void {
-        unset($this->factories[$name]);
-        unset($this->objects[$name]);
+    public function offsetUnset($offset): void {
+        unset($this->factories[$offset]);
+        unset($this->objects[$offset]);
     }
 
-    public function offsetGet($name): mixed {
-        if (!is_string($name)) {
-            return null;
-        }
-        return $this->get($name);
+    public function offsetGet($offset): mixed {
+        return $this->get($offset);
     }
 }

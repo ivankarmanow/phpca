@@ -5,6 +5,7 @@ namespace adapters;
 use models\User;
 use protocols\Config;
 use protocols\DbGateway;
+use PDO;
 
 class MySqlGateway implements DbGateway {
     
@@ -26,8 +27,15 @@ class MySqlGateway implements DbGateway {
 
     public function get_user(int $id): User
     {
-        $sth = $this->dbh->prepare("SELECT * FROM users WHERE id = :user_id");
+        $sth = $this->dbh->prepare("SELECT User, * FROM users WHERE id = :user_id");
         $sth->bindValue(":user_id", $id);
+        return $sth->fetch();
+    }
+
+    public function get_user_by_email(string $email): User
+    {
+        $sth = $this->dbh->prepare("SELECT User, * FROM users WHERE email = :email");
+        $sth->bindValue(":email", $email);
         return $sth->fetch();
     }
 
@@ -40,8 +48,11 @@ class MySqlGateway implements DbGateway {
 
     public function update_user(User $user): void
     {
+        $db_user = $this->get_user($user->id);
         $sth = $this->dbh->prepare("UPDATE users SET name = :name, email = :email, password = :password WHERE id = :id");
-        $user->password = md5($user->password);
+        if ($user->password != $db_user->password) {
+            $user->password = md5($user->password);
+        }
         $sth->execute((array)$user);
     }
 
@@ -50,5 +61,11 @@ class MySqlGateway implements DbGateway {
         $sth = $this->dbh->prepare("DELETE FROM users WHERE id = :id");
         $sth->bindValue(":id", $id);
         $sth->execute();
+    }
+
+    public function list_users(): array
+    {
+        $sth = $this->dbh->prepare("SELECT User, * FROM users");
+        return $sth->fetchAll();
     }
 }

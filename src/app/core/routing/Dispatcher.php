@@ -2,17 +2,19 @@
 
 namespace routing;
 
-require_once "Router.php";
-require_once __DIR__ . "/../exceptions.php";
+//require_once "Router.php";
+//require_once __DIR__ . "/../exceptions.php";
 
+use controllers\StubController;
 use exceptions\DispatcherHasNotParents;
+use core\exceptions\NotFound;
+use protocols\Controller;
+
 
 class Dispatcher extends Router {
 
-    public function __construct(public string $prefix = "", public array $allowed_methods = HTTP_METHODS) {
-        $this->routes = [];
-        $this->routers = [];
-        $this->name = "root";
+    public function __construct(public Controller $controller, public string $prefix = "", public array $allowed_methods = HTTP_METHODS) {
+        parent::__construct($this->controller, $this->prefix, $this->allowed_methods, "root");
     }
     
     public function getParents()
@@ -20,7 +22,7 @@ class Dispatcher extends Router {
         throw new DispatcherHasNotParents();
     }
 
-    public function resolve(Request $request)
+    public function resolve(Request $request): void
     {
         $path = $request->getPath();
         $method = $request->getMethod();
@@ -28,10 +30,11 @@ class Dispatcher extends Router {
 
         if ($callback === false) {
             if (!$this->routers) {
-                return "404";
+                throw new NotFound();
             }
             foreach ($this->routers as $child) {
                 $callback = $child->resolve($request);
+                $controller = $child->controller;
                 if ($callback) {
                     break;
                 }
@@ -39,9 +42,9 @@ class Dispatcher extends Router {
         }
 
         if ($callback === false) {
-            return "404";
+            throw new NotFound();
         } else {
-            call_user_func($callback, $request);
+            $controller->$callback($request);
         }
     }
 

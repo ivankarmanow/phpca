@@ -18,4 +18,16 @@ class Request
     {
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
+
+    public function getParams()
+    {
+        switch ($this->getMethod()) {
+            case "get":
+                return $_GET;
+            case "post":
+                return $_POST;
+            default:
+                return null;
+        }
+    }
 }
