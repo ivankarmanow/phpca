@@ -19,11 +19,7 @@ class ViewsContainer implements ArrayAccess {
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if (isset($this->views[$offset])) {
-            $this->views[$offset] = $value;
-        } else {
-            $this->views[] = $value;
-        }
+        $this->views[$offset] = $value;
     }
 
     public function offsetUnset(mixed $offset): void

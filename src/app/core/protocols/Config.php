@@ -1,6 +1,6 @@
 <?php
 
-namespace protocols;
+namespace core\protocols;
 
 class Config
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace protocols;
+namespace core\protocols;
 
-use models\CartElement;
-use models\Category;
-use models\User;
-use models\Item;
+use core\models\CartElement;
+use core\models\Category;
+use core\models\User;
+use core\models\Item;
 
 interface DbGateway {
     public function create_user(User $user): void;

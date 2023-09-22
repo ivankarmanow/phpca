@@ -1,6 +1,6 @@
 <?php
 
-namespace models;
+namespace core\models;
 
 class Category implements \ArrayAccess
 {

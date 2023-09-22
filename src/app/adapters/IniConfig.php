@@ -2,7 +2,7 @@
 
 namespace adapters;
 
-use protocols\Config;
+use core\protocols\Config;
 
 
 class IniConfig extends Config {

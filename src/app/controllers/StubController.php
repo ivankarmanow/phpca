@@ -2,7 +2,7 @@
 
 namespace controllers;
 
-use protocols\Controller;
+use core\protocols\Controller;
 
 class StubController extends Controller
 {

@@ -2,12 +2,22 @@
 
 namespace controllers;
 
-use protocols\Controller;
+use core\protocols\Controller;
+use repos\StubRepo;
 use repos\UserRepo;
-use routing\Request;
+use core\routing\Request;
 use core\ViewsContainer;
+use views\user\ListUsersView;
 
 class UserController extends Controller {
+
+    public function __construct(
+        public ViewsContainer $views_container,
+        public UserRepo $repo,
+    ) {
+        parent::__construct($this->views_container);
+        $this->load_views(self::class);
+    }
     public function add(Request $request) {
 
     }
@@ -19,7 +29,11 @@ class UserController extends Controller {
 
     public function list(Request $request)
     {
-
+        $view = $this->views[ListUsersView::class];
+//        var_dump($this->views_container);
+//        var_dump($this->repo->list_users());
+        $view->users = $this->repo->list_users();
+        $view->render();
     }
 
     public function update(Request $request)

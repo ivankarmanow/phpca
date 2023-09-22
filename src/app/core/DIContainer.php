@@ -3,23 +3,26 @@
 namespace core;
 
 use ArrayAccess;
-use exceptions\DependencyNotFound, exceptions\FactoryAlreadyExists, exceptions\ValueError;
+use core\exceptions\DependencyNotFound, core\exceptions\FactoryAlreadyExists, core\exceptions\ValueError;
 
 class DIContainer implements ArrayAccess {
 
     private array $factories = [];
     private array $objects = [];
-    public function register(string $name, callable $factory)
+    public function register(string $name, string | callable $factory)
     {
-        if (is_null($name)) {
-            $this->factories[] = $factory;
+        if (!isset($this->factories[$name])) {
+            $this->factories[$name] = $factory;
         } else {
             throw new FactoryAlreadyExists();
         }
     }
 
-    private function resolve_dependencies(callable $class): object
+    private function resolve_dependencies(string $class): object
     {
+        if (!class_exists($class)) {
+            throw new ValueError();
+        }
         $classReflector = new \ReflectionClass($class);
 
         $constructReflector = $classReflector->getConstructor();
@@ -46,10 +49,11 @@ class DIContainer implements ArrayAccess {
         if (isset($this->objects[$name])) {
             return $this->objects[$name];
         } else {
-            if (function_exists($this->factories[$name])) {
+//            var_dump($this->factories);
+            if (is_callable($this->factories[$name])) {
                 $obj = $this->factories[$name]($this);
             } else if (class_exists($this->factories[$name])) {
-                $obj = $this->resolve_dependencies($this->factories[$name]());
+                $obj = $this->resolve_dependencies($this->factories[$name]);
             }
             $this->objects[$name] = $obj;
             return $obj;
@@ -57,7 +61,8 @@ class DIContainer implements ArrayAccess {
     }
 
     public function offsetSet($offset, $value): void {
-        if (!is_callable($value)) {
+        if (!is_callable($value) and !class_exists($value)) {
+            echo $value;
             throw new ValueError();
         }
         $this->register($offset, $value);

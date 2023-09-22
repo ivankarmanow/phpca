@@ -2,12 +2,11 @@
 
 namespace repos;
 
-use exceptions\ValueError;
-use protocols\Repo;
-use models\User;
-use exceptions\EmailExists;
+use core\exceptions\ValueError;
+use core\models\User;
+use core\exceptions\EmailExists;
 
-class UserRepo extends Repo
+class UserRepo extends StubRepo
 {
     public function is_email_unique(string $email): bool
     {

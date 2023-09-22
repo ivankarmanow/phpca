@@ -1,14 +1,16 @@
 <?php
 
-namespace routing;
+namespace core\routing;
+
+require_once __DIR__ . "/methods.php";
 
 //require_once "Router.php";
 //require_once __DIR__ . "/../exceptions.php";
 
 use controllers\StubController;
-use exceptions\DispatcherHasNotParents;
+use core\exceptions\DispatcherHasNotParents;
 use core\exceptions\NotFound;
-use protocols\Controller;
+use core\protocols\Controller;
 
 
 class Dispatcher extends Router {
@@ -33,6 +35,7 @@ class Dispatcher extends Router {
                 throw new NotFound();
             }
             foreach ($this->routers as $child) {
+//                var_dump($child->routes);
                 $callback = $child->resolve($request);
                 $controller = $child->controller;
                 if ($callback) {
@@ -44,6 +47,7 @@ class Dispatcher extends Router {
         if ($callback === false) {
             throw new NotFound();
         } else {
+//            var_dump($controller);
             $controller->$callback($request);
         }
     }

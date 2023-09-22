@@ -1,17 +1,21 @@
 <?php
 
-namespace protocols;
+namespace core\protocols;
 
-use protocols\Repo;
+use core\protocols\Repo;
 use core\ViewsContainer;
 
 class Controller {
-    public $views_dir;
+    public $views;
 
     public function __construct(
-        public Repo $repo,
-        public ViewsContainer $views
-    ) {
-        $this->views_dir = $this->views[self::class];
+//        protected Repo $repo,
+        public ViewsContainer $views_container
+    ) { }
+
+    public function load_views(string $class)
+    {
+        $this->views = $this->views_container[$class];
+//        var_dump($this->views);
     }
 }

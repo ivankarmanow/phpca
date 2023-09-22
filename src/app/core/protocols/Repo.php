@@ -1,10 +1,8 @@
 <?php
 
-namespace protocols;
+namespace core\protocols;
 
-class Repo
+interface Repo
 {
-    public function __construct(
-        public DbGateway $db,
-    ) { }
+
 }

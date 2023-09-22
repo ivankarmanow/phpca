@@ -3,23 +3,30 @@
 spl_autoload_register(function ($class) {
     $class_path = str_replace('\\', '/', $class);
 
-    $file =  __DIR__ . '/src/app/' . $class_path . '.php';
+    $file =  __DIR__ . '\\src\\app\\' . $class_path . '.php';
 
-    // if the file exists, require it
     if (file_exists($file)) {
         require $file;
+    } else {
+        echo $file;
     }
 });
 
 include "src/app/di.php";
 global $di;
 
-use routing\Dispatcher;
-use routing\Request;
+use controllers\StubController;
+use core\routing\Dispatcher;
+use core\routing\Request;
 use controllers\UserController;
-use routing\Router;
+use core\routing\Router;
 
-$dp = new Dispatcher($di['StubController']);
+$dp = new Dispatcher($di[StubController::class]);
+
+$user_router = new Router($di[UserController::class], "/user");
+$user_router->get("/list", "list");
+
+$dp->include_router($user_router);
 
 //$user_router = new Router();
 

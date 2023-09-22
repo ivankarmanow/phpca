@@ -2,9 +2,9 @@
 
 namespace adapters;
 
-use models\User;
-use protocols\Config;
-use protocols\DbGateway;
+use core\models\User;
+use core\protocols\Config;
+use core\protocols\DbGateway;
 use PDO;
 
 class MySqlGateway implements DbGateway {
@@ -65,7 +65,11 @@ class MySqlGateway implements DbGateway {
 
     public function list_users(): array
     {
-        $sth = $this->dbh->prepare("SELECT User, * FROM users");
-        return $sth->fetchAll();
+        $sth = $this->dbh->prepare("SELECT * FROM users");
+        $sth->setFetchMode(PDO::FETCH_CLASS, User::class);
+        $sth->execute();
+        $users = $sth->fetchAll();
+//        var_dump($users);
+        return $users;
     }
 }

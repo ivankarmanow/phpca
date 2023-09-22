@@ -1,14 +1,16 @@
 <?php
 
-namespace routing;
+namespace core\routing;
 
-require_once __DIR__ . "/../methods.php";
-require "src/app/core/exceptions.php";
+require_once __DIR__ . "/methods.php";
 
-use exceptions\IncludeParentRouter;
-use exceptions\MethodNotAllowed;
-use exceptions\RouterYetIncluded;
-use protocols\Controller;
+//require_once __DIR__ . "/../methods.php";
+//require "src/app/core/exceptions.php";
+
+use core\exceptions\IncludeParentRouter;
+use core\exceptions\MethodNotAllowed;
+use core\exceptions\RouterYetIncluded;
+use core\protocols\Controller;
 
 class Router {
     protected array $routes;
@@ -19,6 +21,7 @@ class Router {
         $this->routes = [];
         $this->routers = [];
         $this->parents = [];
+//        var_dump($this->controller);
     }
 
     public function getParents()
@@ -26,7 +29,7 @@ class Router {
         return $this->parents;
     }
 
-    public function register(string $method, string $path, callable $callback)
+    public function register(string $method, string $path, callable | string $callback)
     {
         if (in_array($method, $this->allowed_methods)) {
             $this->routes[$method][$this->prefix . $path] = $callback;
@@ -35,12 +38,12 @@ class Router {
         }
     }
 
-    public function get(string $path, callable $callback)
+    public function get(string $path, callable | string $callback)
     {
         $this->register("get", $path, $callback);
     }
 
-    public function post(string $path, callable $callback)
+    public function post(string $path, callable | string $callback)
     {
         $this->register("get", $path, $callback);
     }
