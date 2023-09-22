@@ -7,6 +7,9 @@ use core\protocols\Config;
 use core\protocols\DbGateway;
 use PDO;
 
+/*
+ * Реализация интерфейса работы с БД MySQL с помощью PDO
+ */
 class MySqlGateway implements DbGateway {
     
     private PDO $dbh;

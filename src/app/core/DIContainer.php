@@ -5,6 +5,13 @@ namespace core;
 use ArrayAccess;
 use core\exceptions\DependencyNotFound, core\exceptions\FactoryAlreadyExists, core\exceptions\ValueError;
 
+/*
+ * DI контейнер, или контейнер зависимостей
+ * Хранит массив фабрик и готовых объектов
+ * Выдаёт зависимости, создавая нужные объекты или получая их из кэша
+ * Разрешает все зависимости класса через получение типов аргументов консттруктора и поиска их в контейнере
+ * Реализует интерфейс массива
+ */
 class DIContainer implements ArrayAccess {
 
     private array $factories = [];

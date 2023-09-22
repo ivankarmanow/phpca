@@ -5,6 +5,11 @@ namespace core\protocols;
 use core\protocols\Repo;
 use core\ViewsContainer;
 
+/*
+ * Базовый класс контроллера
+ * Должен быть переопределён
+ * Каждый контроллер включает массив views представлений, берущийся из контейнера ViewsContainer для каждого контроллера
+ */
 class Controller {
     public $views;
 

@@ -6,6 +6,11 @@ use core\exceptions\ValueError;
 use core\models\User;
 use core\exceptions\EmailExists;
 
+/*
+ * Репозиторий работы с моделью пользователя
+ * Слой абстракции между db gateway и контроллером
+ * Собирает модели из сырых данных
+ */
 class UserRepo extends StubRepo
 {
     public function is_email_unique(string $email): bool

@@ -2,6 +2,9 @@
 
 namespace core\models;
 
+/*
+ * Модель пользователя
+ */
 class User
 {
 

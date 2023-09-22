@@ -12,16 +12,20 @@ use core\exceptions\MethodNotAllowed;
 use core\exceptions\RouterYetIncluded;
 use core\protocols\Controller;
 
+/*
+ * Роутер
+ * Основной класс маршрутизации запросов к контроллерам и их методам
+ * Может включать в себя другие роутеры
+ */
 class Router {
-    protected array $routes;
-    protected array $routers;
-    private array $parents;
+    protected array $routes; // Массив эндпоинтов и соответсвующих методов
+    protected array $routers; // Дочерние роутеры
+    private array $parents; // Родительские роутеры
 
     public function __construct(public Controller $controller, public string $prefix = "", public array $allowed_methods = HTTP_METHODS, public string $name = "") {
         $this->routes = [];
         $this->routers = [];
         $this->parents = [];
-//        var_dump($this->controller);
     }
 
     public function getParents()

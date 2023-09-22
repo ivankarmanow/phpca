@@ -2,12 +2,22 @@
 
 namespace core\models;
 
+/*
+ * Модель товара
+ * Связана с одной категорией
+*/
 class Item
 {
 
     public Category $category;
 
-    public function __construct(public string $name, public int $price, public int $quantity = 0, public int $category_id = -1, public int $id = -1) {
+    public function __construct(
+        public string $name,
+        public int $price,
+        public int $quantity = 0,
+        public int $category_id = -1,
+        public int $id = -1
+    ) {
 
     }
 

@@ -4,7 +4,9 @@ namespace adapters;
 
 use core\protocols\Config;
 
-
+/*
+ * Реализация загрузчика конфига из .ini файла
+ */
 class IniConfig extends Config {
     public function __construct(string $file_name) {
         $data = parse_ini_file($file_name);

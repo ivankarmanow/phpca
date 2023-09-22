@@ -2,7 +2,11 @@
 
 namespace core\routing;
 
-
+/*
+ * Запрос
+ * Абстрагирует получение пути, метода и параметров
+ * Передаётся в контроллеры из роутеров
+ */
 class Request
 {
     public function getPath()

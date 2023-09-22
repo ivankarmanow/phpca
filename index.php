@@ -21,13 +21,25 @@ use core\routing\Request;
 use controllers\UserController;
 use core\routing\Router;
 
+/*
+ * Создание корневого диспетчера с контроллером-заглушкой
+ */
 $dp = new Dispatcher($di[StubController::class]);
 
+/*
+ * Роутер операций над пользователями
+ * Регистрируется контроллер UserController
+ * На эндпоинт /user/list вешается UserController->list
+ */
 $user_router = new Router($di[UserController::class], "/user");
 $user_router->get("/list", "list");
 
+/*
+ * Включение роутера в основной обработчик событий
+ */
 $dp->include_router($user_router);
 
-//$user_router = new Router();
-
+/*
+ * Маршрутизация запроса через диспетчер, выполняется рекурсивно по всем роутерам
+ */
 $dp->resolve(new Request());

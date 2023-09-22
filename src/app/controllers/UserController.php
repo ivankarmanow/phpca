@@ -9,6 +9,11 @@ use core\routing\Request;
 use core\ViewsContainer;
 use views\user\ListUsersView;
 
+/*
+ * Контроллер User
+ * Реализует методы, схожие с репозиторием
+ * Получает данные от пользователя и отдаёт представлениям (view)
+ */
 class UserController extends Controller {
 
     public function __construct(

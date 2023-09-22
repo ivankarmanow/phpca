@@ -4,6 +4,19 @@ namespace core;
 
 use ArrayAccess;
 
+/*
+ * Контейнер представлений (Views)
+ * Простая абстракция, реализованная как обычный массив
+ * Иерархия представлений:
+ * [
+ *     Controller1:
+ *         add
+ *         get
+ *         delete
+ *     Controller2:
+ *         update
+ * ]
+ */
 class ViewsContainer implements ArrayAccess {
     public array $views = [];
 

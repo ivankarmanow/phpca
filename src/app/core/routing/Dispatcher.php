@@ -12,7 +12,11 @@ use core\exceptions\DispatcherHasNotParents;
 use core\exceptions\NotFound;
 use core\protocols\Controller;
 
-
+/*
+ * Диспетчер запросов
+ * Является по сути корневым роутером, не имеющим родителей
+ * Выполняет не только поиск соответствующего запросу контроллера и метода, но и передачу им управления
+ */
 class Dispatcher extends Router {
 
     public function __construct(public Controller $controller, public string $prefix = "", public array $allowed_methods = HTTP_METHODS) {

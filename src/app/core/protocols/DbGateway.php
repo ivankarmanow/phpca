@@ -7,6 +7,10 @@ use core\models\Category;
 use core\models\User;
 use core\models\Item;
 
+/*
+ * Интерфейс доступа к БД, Gateway
+ * Абстрагирует работу с данными в БД с помощью моделей, загрузка данных в модели реализуется через репозитории (папка repos)
+ */
 interface DbGateway {
     public function create_user(User $user): void;
 

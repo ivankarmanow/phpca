@@ -2,12 +2,20 @@
 
 namespace core\models;
 
+/*
+ * Модель категории товаров
+ * Включает в себя список товаров Item
+ * Реализует интерфейс массива
+ */
 class Category implements \ArrayAccess
 {
 
     public array $items = [];
 
-    public function __construct(public string $name, public int $id = -1) {
+    public function __construct(
+        public string $name,
+        public int $id = -1
+    ) {
         
     }
 

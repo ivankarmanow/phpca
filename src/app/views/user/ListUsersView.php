@@ -4,6 +4,10 @@ namespace views\user;
 
 use core\protocols\View;
 
+/*
+ * Представление (View) списка пользователей
+ * Отдаёт страницу list.php и прокидывает в неё название страницы $title и список пользователей $users
+ */
 class ListUsersView extends View {
 //    protected string $templateFile = "list";
     public string $title = "Список пользователей";
