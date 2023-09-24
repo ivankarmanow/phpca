@@ -18,7 +18,7 @@ interface DbGateway {
 
     public function get_user(int $id): User;
 
-    public function get_user_by_email(string $email): User;
+    public function get_user_by_email(string $email): User | bool;
 
     public function check_user(string $email, string $password): bool;
 

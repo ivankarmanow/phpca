@@ -16,7 +16,7 @@ class UserRepo extends StubRepo
     public function is_email_unique(string $email): bool
     {
         $user = $this->db->get_user_by_email($email);
-        return empty($user);
+        return !(bool)$user;
     }
 
     public function create_user(string $name, string $email, string $password): void

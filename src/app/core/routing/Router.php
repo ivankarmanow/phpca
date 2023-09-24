@@ -49,7 +49,7 @@ class Router {
 
     public function post(string $path, callable | string $callback)
     {
-        $this->register("get", $path, $callback);
+        $this->register("post", $path, $callback);
     }
 
     public function resolve(Request $request)

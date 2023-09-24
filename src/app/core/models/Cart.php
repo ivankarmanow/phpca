@@ -20,7 +20,7 @@ class Cart extends Model
         int $user_id = -1,
         array $elements = array()
     ) {
-        if (!empty($user_id)) {
+        if ($user_id > 0) {
             $this->user_id = $user_id;
         }
         if (!empty($elements)) {

@@ -5,6 +5,7 @@ use core\DIContainer;
 use adapters\IniConfig;
 use core\ViewsContainer;
 use repos\UserRepo;
+use views\user\AddUserView;
 use views\user\ListUsersView;
 use adapters\MySqlGateway;
 use controllers\StubController;
@@ -23,7 +24,8 @@ $di[DbGateway::class] = MySqlGateway::class;
 $di[ViewsContainer::class] = function (DIContainer $container) {
     $views = new ViewsContainer();
     $views[UserController::class] = [
-        ListUsersView::class => new ListUsersView()
+        ListUsersView::class => new ListUsersView(),
+        AddUserView::class => new AddUserView(),
     ];
     return $views;
 };

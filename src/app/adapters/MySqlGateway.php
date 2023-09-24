@@ -17,7 +17,8 @@ class MySqlGateway implements DbGateway {
     
     public function __construct(Config $config) {
         $options = [
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
         $this->dbh = new PDO($config->db_dsn, $config->db_user, $config->db_password, $options);
     }
@@ -34,20 +35,26 @@ class MySqlGateway implements DbGateway {
     {
         $sth = $this->dbh->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
         $user->password = md5($user->password);
-        $sth->execute((array)$user);
+//        var_dump((array)$user);
+        $params = (array)$user;
+        unset($params['id']);
+//        var_dump($params);
+        $sth->execute($params);
     }
 
     public function get_user(int $id): User
     {
-        $sth = $this->dbh->prepare("SELECT 'User', * FROM users WHERE id = :user_id");
+        $sth = $this->dbh->prepare("SELECT 'User', users.* FROM users WHERE id = :user_id");
         $sth->bindValue(":user_id", $id);
         return $sth->fetch();
     }
 
-    public function get_user_by_email(string $email): User
+    public function get_user_by_email(string $email): User | bool
     {
-        $sth = $this->dbh->prepare("SELECT 'User', * FROM users WHERE email = :email");
+        $sth = $this->dbh->prepare("SELECT :class, users.* FROM users WHERE email = :email");
         $sth->bindValue(":email", $email);
+        $sth->bindValue(":class", User::class);
+        $sth->execute();
         return $sth->fetch();
     }
 
@@ -77,7 +84,7 @@ class MySqlGateway implements DbGateway {
 
     public function list_users(): array
     {
-        return $this->dbh->query("SELECT 'User', * FROM users")->fetchAll();
-//        $sth->setFetchMode(PDO::FETCH_CLASS, User::class);
+        $class = User::class;
+        return $this->dbh->query("SELECT '$class', users.* FROM users")->fetchAll();
     }
 }

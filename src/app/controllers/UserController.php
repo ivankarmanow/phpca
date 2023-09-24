@@ -2,11 +2,13 @@
 
 namespace controllers;
 
+use core\exceptions\EmailExists;
 use core\protocols\Controller;
 use repos\StubRepo;
 use repos\UserRepo;
 use core\routing\Request;
 use core\ViewsContainer;
+use views\user\AddUserView;
 use views\user\ListUsersView;
 
 use core\exceptions\MethodNotAllowed;
@@ -30,7 +32,24 @@ class UserController extends Controller {
             throw new MethodNotAllowed();
         }
         $params = $request->getParams();
-        
+//        if (array_key_exists("back", $params)) {
+//            $back = $params['back'];
+//        } else {
+//            $back = $_SERVER['HTTP_REFERER'] ?? "/";
+//        }
+        $view = $this->views[AddUserView::class];
+        try {
+            $this->repo->create_user(...$params);
+        } catch (EmailExists $e) {
+            $view->response_status = false;
+            $view->error = "exists";
+        } catch (\Exception $e) {
+            $view->response_status = false;
+            $view->error = $e->getMessage();
+//            var_dump($e->getTrace());
+        } finally {
+            $view->render();
+        }
     }
 
     public function get(Request $request)

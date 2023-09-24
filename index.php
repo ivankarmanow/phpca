@@ -33,6 +33,7 @@ $dp = new Dispatcher($di[StubController::class]);
  */
 $user_router = new Router($di[UserController::class], "/user");
 $user_router->get("/list", "list");
+$user_router->post("/add", "add");
 
 /*
  * Включение роутера в основной обработчик событий

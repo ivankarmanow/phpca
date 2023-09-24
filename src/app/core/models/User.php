@@ -40,7 +40,7 @@ class User extends Model
         if (!empty($password)) {
             $this->password = $password;
         }
-        if (!empty($id)) {
+        if ($id > 0) {
             $this->id = $id;
         }
     }
