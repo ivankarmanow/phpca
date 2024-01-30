@@ -205,7 +205,7 @@ php setup.php
 Представления, более известные как **View** (_вьюшки_) - классы, отображающие интерфейс пользователя и передающие в него данные из контроллеров и моделей.
 - [`templates/`](src/app/views/templates) - каталог базовых HTML шаблонов страниц, которые используются всеми остальными представлениями.
 - [`user/`](src/app/views/user) - группа представлений для работы с пользователями, связаны с контроллером [`UserController`](src/app/controllers/UserController.php).
-  - [`user/templates/`](src/app/views/user/templates) - HTML страницы, используемые представлениями `user`.
+  - [`user/templates/`](src/app/views/templates) - HTML страницы, используемые представлениями `user`.
   - [`user/ListUsersView.php`](src/app/views/user/ListUsersView.php) - единственная пока реализованная вьюшка для представления списка зарегистрированных пользователей. Прокидывает на страницу список пользователей, полученный от контроллера.
 
 ### [di.php](src/app/di.php)

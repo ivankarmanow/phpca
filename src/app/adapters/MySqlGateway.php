@@ -2,11 +2,10 @@
 
 namespace adapters;
 
-use core\models\User;
+use core\models\User as User;
 use core\protocols\Config;
 use core\protocols\DbGateway;
 use PDO;
-use core\protocols\Model;
 
 /*
  * Реализация интерфейса работы с БД MySQL с помощью PDO
@@ -31,7 +30,7 @@ class MySqlGateway implements DbGateway {
         $this->dbh->query($sql);
     }
 
-    public function create_user(User $user): void
+    public function create_user(User $user): int
     {
         $sth = $this->dbh->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
         $user->password = md5($user->password);
@@ -40,12 +39,15 @@ class MySqlGateway implements DbGateway {
         unset($params['id']);
 //        var_dump($params);
         $sth->execute($params);
+        return $this->dbh->lastInsertId();
     }
 
-    public function get_user(int $id): User
+    public function get_user_by_id(int $id): User | bool
     {
-        $sth = $this->dbh->prepare("SELECT 'User', users.* FROM users WHERE id = :user_id");
-        $sth->bindValue(":user_id", $id);
+        $sth = $this->dbh->prepare("SELECT :class, users.* FROM users WHERE id = :user_id");
+        $sth->bindValue("user_id", $id);
+        $sth->bindValue("class", User::class);
+        $sth->execute();
         return $sth->fetch();
     }
 
@@ -67,7 +69,7 @@ class MySqlGateway implements DbGateway {
 
     public function update_user(User $user): void
     {
-        $db_user = $this->get_user($user->id);
+        $db_user = $this->get_user_by_id($user->id);
         $sth = $this->dbh->prepare("UPDATE users SET name = :name, email = :email, password = :password WHERE id = :id");
         if ($user->password != $db_user->password) {
             $user->password = md5($user->password);

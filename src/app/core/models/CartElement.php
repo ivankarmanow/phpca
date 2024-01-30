@@ -29,12 +29,12 @@ class CartElement extends Model
         $this->quantity = $quantity;
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
-    public function setItem(Item $item)
+    public function setItem(Item $item): void
     {
         $this->item = $item;
     }

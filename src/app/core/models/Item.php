@@ -33,7 +33,8 @@ class Item extends Model
         $this->id = $id;
     }
 
-    public function setCategory(Category $category) {
+    public function setCategory(Category $category): void
+    {
         $this->category = $category;
     }
 }

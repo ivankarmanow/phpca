@@ -14,9 +14,9 @@ use core\protocols\Model;
  */
 interface DbGateway {
     public function create_model(string $model): void;
-    public function create_user(User $user): void;
+    public function create_user(User $user): int;
 
-    public function get_user(int $id): User;
+    public function get_user_by_id(int $id): User | bool;
 
     public function get_user_by_email(string $email): User | bool;
 

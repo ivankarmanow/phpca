@@ -2,6 +2,7 @@
 
 namespace core\models;
 
+use ArrayAccess;
 use core\protocols\Model;
 
 /*
@@ -9,7 +10,7 @@ use core\protocols\Model;
  * Включает в себя список товаров Item
  * Реализует интерфейс массива
  */
-class Category extends Model implements \ArrayAccess
+class Category extends Model implements ArrayAccess
 {
 
     public static string $tablename = "categories";

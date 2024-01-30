@@ -16,10 +16,10 @@ class UserRepo extends StubRepo
     public function is_email_unique(string $email): bool
     {
         $user = $this->db->get_user_by_email($email);
-        return !(bool)$user;
+        return !$user;
     }
 
-    public function create_user(string $name, string $email, string $password): void
+    public function create_user(string $name, string $email, string $password): int
     {
         if (!$this->is_email_unique($email)) {
             throw new EmailExists();
@@ -29,20 +29,19 @@ class UserRepo extends StubRepo
                 $email,
                 $password
             );
-            $this->db->create_user($user);
+            return $this->db->create_user($user);
         }
     }
 
-    public function list_users()
+    public function list_users(): array
     {
-        $list = $this->db->list_users();
-        return $list;
+        return $this->db->list_users();
     }
 
     public function get_user(int $id = null, string $email = null): User
     {
         if (!empty($id)) {
-            $user = $this->db->get_user($id);
+            $user = $this->db->get_user_by_id($id);
         } else if (!empty($email)) {
             $user = $this->db->get_user_by_email($email);
         } else {
@@ -53,13 +52,12 @@ class UserRepo extends StubRepo
 
     public function auth_user(string $email, string $password): bool
     {
-        $res = $this->db->check_user($email, $password);
-        return $res;
+        return $this->db->check_user($email, $password);
     }
 
     public function update_user(int $id, string $name = null, string $email = null, string $password = null): void
     {
-        $user = $this->db->get_user($id);
+        $user = $this->db->get_user_by_id($id);
         if (!empty($name)) {
             $user->name = $name;
         }

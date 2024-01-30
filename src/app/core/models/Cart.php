@@ -28,7 +28,7 @@ class Cart extends Model
         }
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

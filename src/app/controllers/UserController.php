@@ -4,14 +4,12 @@ namespace controllers;
 
 use core\exceptions\EmailExists;
 use core\protocols\Controller;
-use repos\StubRepo;
-use repos\UserRepo;
+use core\protocols\Repo;
+use core\protocols\View;
 use core\routing\Request;
-use core\ViewsContainer;
-use views\user\AddUserView;
-use views\user\ListUsersView;
-
-use core\exceptions\MethodNotAllowed;
+use Exception;
+use repos\UserRepo;
+use views\RESTView;
 
 /*
  * Контроллер User
@@ -20,50 +18,50 @@ use core\exceptions\MethodNotAllowed;
  */
 class UserController extends Controller {
 
+//    public UserRepo $repo;
+//    public RESTView $view;
+
     public function __construct(
-        public ViewsContainer $views_container,
-        public UserRepo $repo,
+        protected View $view,
+        protected UserRepo $repo
     ) {
-        parent::__construct($this->views_container);
-        $this->load_views(self::class);
+        parent::__construct($view);
     }
-    public function add(Request $request) {
-        if ($request->getMethod() != "post") {
-            throw new MethodNotAllowed();
-        }
+
+    public function add(Request $request): void
+    {
         $params = $request->getParams();
 //        if (array_key_exists("back", $params)) {
 //            $back = $params['back'];
 //        } else {
 //            $back = $_SERVER['HTTP_REFERER'] ?? "/";
 //        }
-        $view = $this->views[AddUserView::class];
         try {
-            $this->repo->create_user(...$params);
-        } catch (EmailExists $e) {
-            $view->response_status = false;
-            $view->error = "exists";
-        } catch (\Exception $e) {
-            $view->response_status = false;
-            $view->error = $e->getMessage();
-//            var_dump($e->getTrace());
-        } finally {
-            $view->render();
+            $user_id = $this->repo->create_user(...$params);
+            $this->view->render([
+                "message" => "User created",
+                "user" => $this->repo->get_user($user_id)
+            ]);
+        } catch (EmailExists) {
+            $this->view->render([],false, 402);
+        } catch (Exception $e) {
+            $this->view->render([], false, 500);
         }
     }
 
-    public function get(Request $request)
+    public function get(Request $request): void
     {
-
+        $user = $this->repo->get_user(...$request->getParams("id", "email"));
+        $this->view->render([
+            "user" => $user
+        ]);
     }
 
-    public function list(Request $request)
+    public function list(Request $request): void
     {
-        $view = $this->views[ListUsersView::class];
-//        var_dump($this->views_container);
-//        var_dump($this->repo->list_users());
-        $view->users = $this->repo->list_users();
-        $view->render();
+        $this->view->render([
+            "users" => $this->repo->list_users()
+        ]);
     }
 
     public function update(Request $request)

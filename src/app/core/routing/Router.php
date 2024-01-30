@@ -7,6 +7,8 @@ require_once __DIR__ . "/methods.php";
 //require_once __DIR__ . "/../methods.php";
 //require "src/app/core/exceptions.php";
 
+use controllers\StubController;
+use core\exceptions\ControllerMissing;
 use core\exceptions\IncludeParentRouter;
 use core\exceptions\MethodNotAllowed;
 use core\exceptions\RouterYetIncluded;
@@ -21,35 +23,45 @@ class Router {
     protected array $routes; // Массив эндпоинтов и соответсвующих методов
     protected array $routers; // Дочерние роутеры
     private array $parents; // Родительские роутеры
+    protected array $exceptionHandlers;
 
-    public function __construct(public Controller $controller, public string $prefix = "", public array $allowed_methods = HTTP_METHODS, public string $name = "") {
+    public function __construct(public ?Controller $controller = null, public string $prefix = "", public bool $login_required = false, public mixed $rights = false, public array $allowed_methods = HTTP_METHODS, public string $name = "") {
         $this->routes = [];
         $this->routers = [];
         $this->parents = [];
+        $this->exceptionHandlers = [];
     }
 
-    public function getParents()
+    public function getParents(): array
     {
         return $this->parents;
     }
 
-    public function register(string $method, string $path, callable | string $callback)
+    public function register(string $method, string $path, callable | string $callback, ?Controller $controller = null, bool $login_required = false, mixed $rights = array()): void
     {
         if (in_array($method, $this->allowed_methods)) {
-            $this->routes[$method][$this->prefix . $path] = $callback;
+            $this->routes[$method][$this->prefix . $path] = [
+                "controller" => $controller ?: $this->controller,
+                "callback" => $callback,
+                "login_required" => $login_required ?: $this->login_required,
+                "rights" => $rights ?: $this->login_required
+            ];
+            if (!$this->routes[$method][$this->prefix . $path]["controller"]) {
+                throw new ControllerMissing();
+            }
         } else {
             throw new MethodNotAllowed("Method $method not allowed. Allowed methods: $this->allowed_methods");
         }
     }
 
-    public function get(string $path, callable | string $callback)
+    public function get(string $path, callable | string $callback, ?Controller $controller = null, bool $login_required = false, mixed $rights = array()): void
     {
-        $this->register("get", $path, $callback);
+        $this->register("get", $path, $callback, $controller, $login_required, $rights);
     }
 
-    public function post(string $path, callable | string $callback)
+    public function post(string $path, callable | string $callback, ?Controller $controller = null, bool $login_required = false, mixed $rights = array()): void
     {
-        $this->register("post", $path, $callback);
+        $this->register("post", $path, $callback, $controller, $login_required, $rights);
     }
 
     public function resolve(Request $request)
@@ -73,7 +85,7 @@ class Router {
         return $callback;
     }
 
-    public function in(self $router)
+    public function in(self $router): bool
     {
         if (!$this->routers) {
             return false;
@@ -90,7 +102,8 @@ class Router {
         return false;
     }
 
-    public function is_parent(self $router) {
+    public function is_parent(self $router): bool
+    {
         if (!$this->parents) {
             return false;
         }
@@ -106,7 +119,7 @@ class Router {
         return false;
     }
 
-    public function include_router(self $router, string $prefix = "")
+    public function include_router(self $router, string $prefix = ""): void
     {
         if (!$router->prefix) {
             $router->prefix = $prefix;

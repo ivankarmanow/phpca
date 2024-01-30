@@ -1,4 +1,7 @@
-<?php require __DIR__ . "/../../templates/header.html" ?>
+<?php
+$title = "Список пользователей";
+require __DIR__ . "/../../templates/header.html";
+?>
 <table>
     <tr>
         <th>ID</th>

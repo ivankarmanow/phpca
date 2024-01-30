@@ -2,7 +2,9 @@
 
 namespace core\exceptions;
 
-class NotFound extends \Exception
-{
+use Exception;
 
+class NotFound extends Exception
+{
+    public string $path;
 }

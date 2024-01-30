@@ -3,7 +3,8 @@
 namespace core;
 
 use ArrayAccess;
-use core\exceptions\DependencyNotFound, core\exceptions\FactoryAlreadyExists, core\exceptions\ValueError;
+use core\exceptions\FactoryAlreadyExists, core\exceptions\ValueError;
+use ReflectionClass;
 
 /*
  * DI контейнер, или контейнер зависимостей
@@ -16,7 +17,7 @@ class DIContainer implements ArrayAccess {
 
     private array $factories = [];
     private array $objects = [];
-    public function register(string $name, string | callable $factory)
+    public function register(string $name, string | callable $factory): void
     {
         if (!isset($this->factories[$name])) {
             $this->factories[$name] = $factory;
@@ -30,7 +31,7 @@ class DIContainer implements ArrayAccess {
         if (!class_exists($class)) {
             throw new ValueError();
         }
-        $classReflector = new \ReflectionClass($class);
+        $classReflector = new ReflectionClass($class);
 
         $constructReflector = $classReflector->getConstructor();
         if (empty($constructReflector)) {
