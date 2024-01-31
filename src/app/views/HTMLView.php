@@ -16,6 +16,7 @@ class HTMLView implements View
         ?string $template = null
     ): void
     {
+        extract($data);
         require __DIR__ . "/templates/" . $this->templates[$template] . ".php";
     }
 }
