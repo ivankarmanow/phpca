@@ -52,6 +52,7 @@ $user_router = new Router($di[UserController::class], "/user");
 $user_router->get("/list", "list");
 $user_router->post("/add", "add");
 $user_router->get("/get", "get");
+$user_router->get("/get/{id}", "get");
 
 /*
  * Включение роутера в основной обработчик событий

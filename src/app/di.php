@@ -5,8 +5,9 @@ use adapters\MySqlGateway;
 use controllers\IndexController;
 use controllers\StubController;
 use controllers\UserController;
+use core\config\DbConfig;
 use core\DIContainer;
-use core\protocols\Config;
+use core\config\Config;
 use core\protocols\DbGateway;
 use core\protocols\View;
 use repos\UserRepo;
@@ -19,6 +20,9 @@ use views\RESTView;
 $di = new DIContainer();
 $di[Config::class] = function (DIContainer $container) {
     return new IniConfig("config.ini");
+};
+$di[DbConfig::class] = function (DIContainer $container) {
+    return $container->get(Config::class)->db;
 };
 $di[DbGateway::class] = MySqlGateway::class;
 //$di[ViewsContainer::class] = function (DIContainer $container) {

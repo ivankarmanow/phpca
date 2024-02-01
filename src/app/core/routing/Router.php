@@ -64,11 +64,26 @@ class Router {
         $this->register("post", $path, $callback, $controller, $login_required, $rights);
     }
 
+    protected function isMatch(string $pattern, string $uri): bool {
+        $pattern = preg_replace('#\{([a-zA-Z0-9_]+)}#', '([a-zA-Z0-9_]+)', $pattern);
+        $pattern = '#^' . $pattern . '$#';
+        return preg_match($pattern, $uri);
+    }
+
     public function resolve(Request $request)
     {
         $path = $request->getPath();
         $method = $request->getMethod();
-        $callback = $this->routes[$method][$path] ?? false;
+        $callback = false;
+        if (!empty($this->routes[$method])) {
+            foreach ($this->routes[$method] as $route => $action) {
+                if ($this->isMatch($route, $path)) {
+                    $callback = $action;
+                    $request->extractParams($route, $path);
+                    break;
+                }
+            }
+        }
 
         if ($callback === false) {
             if (!$this->routers) {

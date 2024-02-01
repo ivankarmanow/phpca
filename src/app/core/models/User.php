@@ -25,23 +25,12 @@ class User extends Model
     public string $password;
     public int $id;
 
-    public function __construct(
-        string $name = "",
-        string $email = "",
-        string $password = "",
-        int $id = -1
-    ) {
-        if (!empty($name)) {
-            $this->name = $name;
-        }
-        if (!empty($email)) {
-            $this->email = $email;
-        }
-        if (!empty($password)) {
-            $this->password = $password;
-        }
-        if ($id > 0) {
-            $this->id = $id;
+    public function __construct(...$args) {
+        $props = get_class_vars($this::class);
+        foreach ($args as $arg => $value) {
+            if (isset($props[$arg])) {
+                $this->$arg = $value;
+            }
         }
     }
 }

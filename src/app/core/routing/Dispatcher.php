@@ -53,7 +53,16 @@ class Dispatcher extends Router
     {
         $path = $request->getPath();
         $method = $request->getMethod();
-        $callback = $this->routes[$method][$path] ?? false;
+        $callback = false;
+        if (!empty($this->routes[$method])) {
+            foreach ($this->routes[$method] as $route => $action) {
+                if ($this->isMatch($route, $path)) {
+                    $callback = $action;
+                    $request->extractParams($route, $path);
+                    break;
+                }
+            }
+        }
 
         if ($callback === false) {
             if (!$this->routers) {

@@ -3,7 +3,7 @@
 namespace adapters;
 
 use core\models\User as User;
-use core\protocols\Config;
+use core\config\DbConfig;
 use core\protocols\DbGateway;
 use PDO;
 
@@ -14,12 +14,12 @@ class MySqlGateway implements DbGateway {
     
     private PDO $dbh;
     
-    public function __construct(Config $config) {
+    public function __construct(DbConfig $config) {
         $options = [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ];
-        $this->dbh = new PDO($config->db_dsn, $config->db_user, $config->db_password, $options);
+        $this->dbh = new PDO($config->dsn, $config->user, $config->password, $options);
     }
 
     public function create_model(string $model): void

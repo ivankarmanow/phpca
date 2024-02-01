@@ -14,6 +14,8 @@ class Request
     public array $params;
     public ?string $authorization;
 
+    public array $pathParams;
+
     public function __construct()
     {
         $this->path = $this->getPath();
@@ -22,7 +24,27 @@ class Request
         $this->authorization = $this->getAuthorization();
     }
 
-    public function getPath()
+    public function extractParams(string $route, string $uri): void {
+        $pattern = preg_replace('#\{([a-zA-Z0-9_]+)}#', '([a-zA-Z0-9_]+)', $route);
+        $pattern = '#^' . $pattern . '$#';
+        preg_match($pattern, $uri, $matches);
+//        var_dump($pattern, $uri);
+        array_shift($matches);
+
+        $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '{$1}', $route);
+        $paramNames = [];
+        preg_match_all('/\{([a-zA-Z0-9_]+)\}/', $pattern, $paramNames);
+        $paramNames = $paramNames[1];
+
+        $assocParams = [];
+        foreach ($paramNames as $index => $name) {
+            $assocParams[$name] = $matches[$index];
+        }
+
+        $this->pathParams = $assocParams;
+    }
+
+    public function getPath(): string
     {
         $path = $_SERVER['REQUEST_URI'] ?? '/';
         $position = strpos($path, '?');
@@ -47,7 +69,7 @@ class Request
         $paramsArray = ($method === "get") ? $_GET : $_POST;
         if (!empty($keys)) {
             return array_map(function ($key) use ($paramsArray) {
-                return $paramsArray[$key] ?? null;
+                return $this->pathParams[$key] ?? ($paramsArray[$key] ?? null);
             }, $keys);
         } else {
             return $paramsArray;

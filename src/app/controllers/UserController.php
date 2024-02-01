@@ -51,6 +51,7 @@ class UserController extends Controller {
 
     public function get(Request $request): void
     {
+        $selector =
         $user = $this->repo->get_user(...$request->getParams("id", "email"));
         $this->view->render([
             "user" => $user
