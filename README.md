@@ -48,13 +48,6 @@ php setup.php
         │       IniConfig.php
         │       MySqlGateway.php
         │
-        ├───auth
-        │   ├───JWT
-        │   ├───RestTokens
-        │   │       TokenAuthentication.php
-        │   │       TokenAuthorization.php
-        │   │
-        │   └───UserPassword
         ├───controllers
         │       IndexController.php
         │       StubController.php
@@ -62,6 +55,10 @@ php setup.php
         │
         ├───core
         │   │   DIContainer.php
+        │   │
+        │   ├───config
+        │   │       Config.php
+        │   │       DbConfig.php
         │   │
         │   ├───exceptions
         │   │       ControllerMissing.php
@@ -85,7 +82,6 @@ php setup.php
         │   ├───protocols
         │   │       Authentication.php
         │   │       Authorization.php
-        │   │       Config.php
         │   │       Controller.php
         │   │       DbGateway.php
         │   │       Model.php
@@ -129,6 +125,8 @@ php setup.php
 ### [Core](src/app/core)
 Базовые компоненты приложения, такие как модели, исключения и протоколы. При правильной настройке меняется редко, чаще всего только добавляются модели.
 Думайте об этой директории как о скелете приложения, на котором основаны все компоненты.
+- [`config/`](src/app/core/config/) - базовый конфиг приложения и конфиги всех компонентов как отдельные классы
+- [`config/Config.php`](src/app/core/protocols/config/Config.php) - модель конфига приложения. Обратите внимание, что не указан способ загрузки данных, это возлагается на реализацию.
 - [`exceptions/`](src/app/core/exceptions/) - исключения, используемые приложением. Название каждого класса (файла) говорит само за себя.
 - [`models/`](src/app/core/models/) - модели данных, упрощающие взаимодействие между различными компонентами приложения, к примеру упрощает доступ к данным из базы данных.
 - [`DIContainer.php`](src/app/core/DIContainer.php) - **контейнер** зависимостей. В проекте используется концепция **Dependency Injection** (внедрение зависимостей). 
@@ -142,7 +140,6 @@ php setup.php
 
 В этой папке лежат **протоколы** - интерфейсы, абстрактные и обычные классы, не используемые напрямую, а лишь предоставляющие протокол взаимодействия с чем-либо
 Это позволяет всем компонентам унифицировать доступ к другим, все связи происходят между протоколами, реализации которых остаются за кулисами.
-- [`Config.php`](src/app/core/protocols/Config.php) - модель конфига приложения. Обратите внимание, что не указан способ загрузки данных, это возлагается на реализацию.
 - [`Controller.php`](src/app/core/protocols/Controller.php) - базовый класс-контроллер. Не задаёт строго ничего кроме работы с представлениями, так как это общее для всех контроллеров.
 - [`DbGateway.php`](src/app/core/protocols/DbGateway.php) - интерфейс абстракции базы данных от кода. Данный интерфейс предоставляет базовые функции работы с моделями, которые можно использовать в более высокоуровневых компонентах без учёта особеноостей работы с БД.
 
@@ -204,7 +201,7 @@ php setup.php
 При грамотной архитектуре контроллеры - связующее звено между всеми компонентами, однако их код самый маленький, за счёт абстракции многих действий в другие слои и компоненты.
 - [`StubController.php`](src/app/controllers/StubController.php) - используется для той же цели, что и [`StubRepo`](src/app/repos/StubRepo.php), однако также используется в качестве контроллера диспетчера, так как диспетчер не должен сам обрабатывать что-либо.
 - [`UserController.php`](src/app/controllers/UserController.php) - основной контроллер, реализующий все действия надо пользователями. На данный момент реализованы только методы `add`, `list` и `get`.
-- - [`UserController.php`](src/app/controllers/UserController.php) - контроллер главной страницы - /.
+- [`UserController.php`](src/app/controllers/UserController.php) - контроллер главной страницы - /.
 
 ### [Views](src/app/views)
 
